@@ -1,0 +1,56 @@
+# upload-recursive-asset-action
+Action to create and upload a recursively made archive
+
+### usage
+
+```
+name: create release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tagname:
+        description: "tag name"
+        required: true
+      releasename:
+        description: "release name"
+        required: false
+      latest:
+        description: "mark as latest release"
+        type: boolean
+        default: true
+      deep:
+        description: 'create archive recursively on all levels'
+        type: boolean
+        default: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+      - name: create release
+        uses: oskarirauta/create-release-action@v1
+        with:
+          token: ${{ github.token }}
+          tag: ${{ inputs.tagname }}
+          release: ${{ inputs.releasename }}
+          latest: ${{ inputs.latest }}
+      - name: report
+        shell: bash
+        run: |
+          echo "created release ${{ inputs.releasename }} with tag ${{ inputs.tagname }}" >> $GITHUB_STEP_SUMMARY
+      - name: create asset
+        uses: oskarirauta/upload-recursive-asset-action@v1
+        with:
+          token: ${{ github.token }}
+          tag: ${{ inputs.tagname }}
+          id: ${{ env.release_id }}
+          deep: ${{ inputs.deep }}
+      - name: finish
+        shell: bash
+        run: |
+          echo "release ${{ env.release_name }} created succesfully" >> $GITHUB_STEP_SUMMARY
+          echo "recursive asset ${{ env.asset_file }} uploaded with size of ${{ env.bytes_uploaded }} bytes" >> $GITHUB_STEP_SUMMARY
+```
