@@ -40,9 +40,9 @@ runs:
         set -x
         git clone https://github.com/${{ github.repository }} "${{ github.event.repository.name }}-${{ inputs.tag }}"
         cd "${{ github.event.repository.name }}-${{ inputs.tag }}"
-        git submodule update --init $DEEP --remote
+        git submodule update --init $DEEP
         cd ..
-        tar -czf "${{ github.event.repository.name }}-${{ inputs.tag }}.tar.gz" "${{ github.event.repository.name }}-${{ inputs.tag }}"
+        tar --exclude-vcs -czf "${{ github.event.repository.name }}-${{ inputs.tag }}.tar.gz" "${{ github.event.repository.name }}-${{ inputs.tag }}"
     - name: upload asset
       shell: bash
       run: |
