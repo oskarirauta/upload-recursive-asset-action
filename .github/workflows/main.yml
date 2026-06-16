@@ -23,9 +23,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: create release
-        uses: oskarirauta/create-release-action@v1
+        uses: oskarirauta/create-release-action@v2
         with:
           token: ${{ github.token }}
           tag: ${{ inputs.tagname }}
